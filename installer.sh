@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #Pacman Packages:
-PACKAGES="hyprlock wofi waybar kitty noto-fonts ttf-bitstream-vera git base-devel cliphist hyprland hyprpaper hyprcursor hyprsunset hyprpolkitagent xdg-desktop-portal-hyprland pipewire pipewire-pulse pipewire-alsa wireplumber pipewire-jack "
+PACKAGES="hyprlock wofi waybar kitty noto-fonts ttf-bitstream-vera git base-devel cliphist hyprland hyprpaper hyprcursor hyprsunset hyprpolkitagent xdg-desktop-portal-hyprland pipewire pipewire-pulse pipewire-alsa wireplumber pipewire-jack npm "
 
 #Yay Packages:
-Yay_PACKAGES="ttf-nerd-fonts-symbols python-hijri-converter rose-pine-cursor"
+Yay_PACKAGES="ttf-nerd-fonts-symbols python-hijri-converter rose-pine-cursor mov-cli ani-cli python-mov-cli-youtube"
 
 
 #Installing Pacman packages
