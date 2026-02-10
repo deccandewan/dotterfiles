@@ -3,14 +3,14 @@
 read -rp "Enter folder to save to:" target_dir
 target_dir="${target_dir/#\~/$HOME}"
 
-mkdir 	"$target_dir/dotfiles/" \
-	"$target_dir/dotfiles/hypr" \
-	"$target_dir/dotfiles/waybar" \
-	"$target_dir/dotfiles/neofetch" \
-	"$target_dir/dotfiles/kitty" \
-	"$target_dir/dotfiles/fontconfig" \
-	"$target_dir/dotfiles/wofi" \
-	"$target_dir/dotfiles/NetworkManager"
+mkdir -p "$target_dir/dotfiles/" \
+	 "$target_dir/dotfiles/hypr" \
+	 "$target_dir/dotfiles/waybar" \
+	 "$target_dir/dotfiles/neofetch" \
+	 "$target_dir/dotfiles/kitty" \
+	 "$target_dir/dotfiles/fontconfig" \
+	 "$target_dir/dotfiles/wofi" \
+	 "$target_dir/dotfiles/NetworkManager"
 cp -r $HOME/.config/hypr/* $target_dir/dotfiles/hypr/ && echo "Copied Hypr!"
 cp -r $HOME/.config/waybar/* $target_dir/dotfiles/waybar/ && echo "Copied Waybar!"
 cp -r $HOME/.config/neofetch/* $target_dir/dotfiles/neofetch/ && echo "Copied Neofetch!"

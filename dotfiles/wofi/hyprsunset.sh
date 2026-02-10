@@ -9,8 +9,9 @@ CHOICE=$(wofi --dmenu \
 [ -z "$CHOICE" ] && exit 0
 
 if [[ "$CHOICE" =~ ^[0-9]+$ ]]; then
-    hyprctl hyprsunset gamma "$CHOICE"
+	pkill hyprsunset
+     	hyprsunset -g "$CHOICE"
 elif [[ "$CHOICE" =~ ^[Rr]eset$ ]]; then
-    hyprctl hyprsunset identity
+     	pkill hyprsunset
 fi
 
