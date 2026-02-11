@@ -52,6 +52,7 @@ alias nv="nvim"
 
 alias snv="sudo nvim"
 alias HDD="sudo mount /dev/sda1 /mnt/HDD"
+alias Hdd="cd /mnt/HDD"
 alias mnt="sudo mount"
 alias ani="ani-cli"
 
