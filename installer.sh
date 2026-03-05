@@ -2,7 +2,6 @@
 
 # Define paths at the start so we don't get lost
 BASE_DIR="$HOME/dotterfiles"
-DOTS_DIR="$BASE_DIR/.dots"
 
 # Pacman Packages
 PACKAGES="hyprlock wofi waybar kitty noto-fonts ttf-bitstream-vera git base-devel cliphist hyprland hyprpaper hyprcursor hyprsunset hyprpolkitagent xdg-desktop-portal-hyprland pipewire pipewire-pulse pipewire-alsa wireplumber pipewire-jack npm wireguard"
@@ -18,18 +17,9 @@ read -p "Cloning git repo, what ya say? (y/n): " gitans
 if [[ "$gitans" =~ ^[Yy]$ ]]; then
     echo "cloning repo to $BASE_DIR"
     git clone https://github.com/falafelvendor/dotterfiles "$BASE_DIR"
-    
-    mkdir -p "$DOTS_DIR"
-    # Moving specific folders into .dots inside the repo
-    mv "$BASE_DIR/dotfiles/hypr/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfiles/waybar/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfiles/kitty/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfiles/fontconfig/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfiles/neofetch/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfiles/wofi/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfiles/NetworkManager/" "$DOTS_DIR/"
-    mv "$BASE_DIR/dotfinstall.sh" "$DOTS_DIR/"
-    chmod +x "$DOTS_DIR/dotfinstall.sh"
+   
+    cd dotterfiles 
+    chmod +x "dotfinstall.sh"
 else
     echo "git repo skip: Caution, following steps might fail if files are missing."
 fi 
@@ -49,7 +39,7 @@ fi
 # Copy Dotfiles (Running your sub-script)
 read -p "copy dotfiles? (y/n): " copyans
 if [[ "$copyans" =~ ^[Yy]$ ]]; then
-    cd "$DOTS_DIR" && ./dotfinstall.sh
+    ./dotfinstall.sh
 fi
 
 # Install Yay
