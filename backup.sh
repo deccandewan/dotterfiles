@@ -1,20 +1,41 @@
 #!/bin/bash
-# Bash script
-read -rp "Enter folder to save to:" target_dir
-target_dir="${target_dir/#\~/$HOME}"
+set -e
 
-mkdir -p "$target_dir/dotfiles/" \
-	 "$target_dir/dotfiles/hypr" \
-	 "$target_dir/dotfiles/waybar" \
-	 "$target_dir/dotfiles/neofetch" \
-	 "$target_dir/dotfiles/kitty" \
-	 "$target_dir/dotfiles/fontconfig" \
-	 "$target_dir/dotfiles/wofi" \
-	 "$target_dir/dotfiles/NetworkManager"
-cp -r $HOME/.config/hypr/* $target_dir/dotfiles/hypr/ && echo "Copied Hypr!"
-cp -r $HOME/.config/waybar/* $target_dir/dotfiles/waybar/ && echo "Copied Waybar!"
-cp -r $HOME/.config/neofetch/* $target_dir/dotfiles/neofetch/ && echo "Copied Neofetch!"
-cp -r $HOME/.config/kitty/* $target_dir/dotfiles/kitty/ && echo "Copied Kitty!"
-cp -r $HOME/.config/fontconfig/* $target_dir/dotfiles/fontconfig/ && echo "Copied FontConfig!"
-cp -r $HOME/.config/wofi/* $target_dir/dotfiles/wofi/ && echo "Copied Wofi!"
-cp -r /etc/NetworkManager/conf.d/00-macrandomize.conf $target_dir/dotfiles/NetworkManager/ && echo "Copied Network Manager Randomize Mac conf"
+read -rp "Enter folder to save backup to: " target_dir
+target_dir="${target_dir/#\~/$HOME}"
+DEST="$target_dir/dotfiles"
+
+backup_config() {
+    local name="$1"
+    local src="${2:-$HOME/.config/$name}"
+    if [ -d "$src" ] || [ -f "$src" ]; then
+        mkdir -p "$DEST/$name"
+        cp -r "$src"/. "$DEST/$name/"
+        echo ">>> Backed up $name"
+    else
+        echo ">>> Skipping $name (not found at $src)"
+    fi
+}
+
+mkdir -p "$DEST"
+
+backup_config hypr
+backup_config waybar
+backup_config kitty
+backup_config fontconfig
+backup_config wofi
+backup_config mako
+backup_config neofetch
+
+# NetworkManager is a file not a dir
+NM_CONF="/etc/NetworkManager/conf.d/00-macrandomize.conf"
+if [ -f "$NM_CONF" ]; then
+    mkdir -p "$DEST/NetworkManager"
+    cp "$NM_CONF" "$DEST/NetworkManager/"
+    echo ">>> Backed up NetworkManager MAC randomization config"
+else
+    echo ">>> Skipping NetworkManager config (not found)"
+fi
+
+echo ""
+echo ">>> Backup complete: $DEST"
