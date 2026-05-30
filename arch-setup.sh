@@ -1,45 +1,51 @@
 #!/usr/bin/env bash
 set -e
 
+# ── Must not run as root ──────────────────────────────────────────────────────
+if [ "$EUID" -eq 0 ]; then
+    echo ">>> Don't run this as root. Run as your normal user (sudo will be called when needed)."
+    exit 1
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo ">>> Updating system..."
 sudo pacman -Syu --noconfirm
 
-echo ">>> Installing core packages (pacman)..."
-sudo pacman -S --noconfirm \
-    hyprland \
-    hyprpaper hyprshot hyprcursor \
-    wofi waybar \
-    sddm
-
-echo ">>> Enabling SDDM..."
+# ── SDDM ──────────────────────────────────────────────────────────────────────
+echo ">>> Installing SDDM..."
+sudo pacman -S --needed --noconfirm sddm
 sudo systemctl enable sddm.service
 
-echo ">>> Installing AUR helper (yay)..."
-if ! command -v yay >/dev/null; then
-  git clone https://aur.archlinux.org/yay.git /tmp/yay
-  cd /tmp/yay
-  makepkg -si --noconfirm
-  cd -
+# ── Yay ───────────────────────────────────────────────────────────────────────
+if ! command -v yay &>/dev/null; then
+    echo ">>> Installing yay..."
+    git clone https://aur.archlinux.org/yay.git /tmp/yay-build
+    (cd /tmp/yay-build && makepkg -si --noconfirm)
+    rm -rf /tmp/yay-build
+else
+    echo ">>> yay already installed, skipping."
 fi
 
-echo ">>> Installing AUR packages (yay)..."
-yay -S --noconfirm \
-    sddm-theme-sugar-candy \
-    neofetch \
-    nerd-fonts-complete
+# ── SDDM Sugar Candy theme ────────────────────────────────────────────────────
+echo ">>> Installing SDDM Sugar Candy theme..."
+yay -S --noconfirm sddm-theme-sugar-candy
 
-echo ">>> Applying Sugar Candy theme to SDDM..."
-sudo mkdir -p /usr/share/sddm/themes
-sudo cp -r /usr/share/sddm/themes/Sugar-Candy /usr/share/sddm/themes/
-sudo sed -i 's|^Current=.*|Current=Sugar-Candy|' /etc/sddm.conf.d/*.conf 2>/dev/null || true
-if [ ! -f /etc/sddm.conf ]; then
-  echo "[Theme]" | sudo tee /etc/sddm.conf
-  echo "Current=Sugar-Candy" | sudo tee -a /etc/sddm.conf
-fi
+sudo mkdir -p /etc/sddm.conf.d
+cat << 'EOF' | sudo tee /etc/sddm.conf.d/theme.conf > /dev/null
+[Theme]
+Current=Sugar-Candy
+EOF
+echo ">>> SDDM theme set to Sugar-Candy"
 
-echo ">>> Installing fonts (Arabic fix + Nerd Fonts)..."
-mkdir -p ~/.config/fontconfig
-cat > ~/.config/fontconfig/fonts.conf <<'EOF'
+# ── Fonts ─────────────────────────────────────────────────────────────────────
+echo ">>> Installing fonts..."
+sudo pacman -S --needed --noconfirm noto-fonts noto-fonts-arabic ttf-bitstream-vera
+yay -S --noconfirm ttf-nerd-fonts-symbols
+
+echo ">>> Configuring fontconfig for Arabic..."
+mkdir -p "$HOME/.config/fontconfig"
+cat > "$HOME/.config/fontconfig/fonts.conf" << 'EOF'
 <?xml version="1.0"?>
 <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
 <fontconfig>
@@ -60,8 +66,17 @@ cat > ~/.config/fontconfig/fonts.conf <<'EOF'
   </alias>
 </fontconfig>
 EOF
-
 fc-cache -fv
 
-echo ">>> Done! Reboot and enjoy Hyprland with SDDM + Sugar Candy theme."
+# ── Hand off to installer.sh ──────────────────────────────────────────────────
+echo ""
+echo ">>> System setup done. Handing off to installer.sh..."
+echo ""
 
+if [ -f "$SCRIPT_DIR/installer.sh" ]; then
+    chmod +x "$SCRIPT_DIR/installer.sh"
+    bash "$SCRIPT_DIR/installer.sh"
+else
+    echo ">>> WARNING: installer.sh not found in $SCRIPT_DIR"
+    echo ">>> Run it manually once you have the repo cloned."
+fi
