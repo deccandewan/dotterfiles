@@ -1,78 +1,94 @@
 #!/bin/bash
+set -e
 
-# Define paths at the start so we don't get lost
+# All paths derived from BASE_DIR — never cd, use absolute paths everywhere
 BASE_DIR="$HOME/dotterfiles"
+DOTFILES="$BASE_DIR/dotfiles"
 
-# Pacman Packages
-PACKAGES="hyprlock wofi waybar kitty noto-fonts ttf-bitstream-vera git base-devel cliphist hyprland hyprpaper hyprcursor hyprsunset hyprpolkitagent xdg-desktop-portal-hyprland pipewire pipewire-pulse pipewire-alsa wireplumber pipewire-jack npm wireguard"
+PACMAN_PACKAGES="hyprlock hypridle wofi waybar kitty mako noto-fonts ttf-bitstream-vera \
+    git base-devel cliphist hyprland hyprpaper hyprcursor hyprsunset hyprpolkitagent \
+    xdg-desktop-portal-hyprland pipewire pipewire-pulse pipewire-alsa wireplumber \
+    pipewire-jack npm wireguard-tools"
 
-# Yay Packages
-Yay_PACKAGES="ttf-nerd-fonts-symbols python-hijri-converter rose-pine-hyprcursor mov-cli ani-cli python-mov-cli-youtube"
+YAY_PACKAGES="ttf-nerd-fonts-symbols python-hijri-converter rose-pine-hyprcursor \
+    mov-cli ani-cli python-mov-cli-youtube"
 
-# Installing Pacman packages
-sudo pacman -Sy --needed $PACKAGES && echo "Base successfully installed."
+# ── Pacman packages ───────────────────────────────────────────────────────────
+echo ">>> Installing pacman packages..."
+sudo pacman -Sy --needed $PACMAN_PACKAGES && echo ">>> Base packages installed."
 
-# Clone Git Repo
-read -p "Cloning git repo, what ya say? (y/n): " gitans
+# ── Clone repo ────────────────────────────────────────────────────────────────
+read -rp "Clone dotterfiles repo? (y/n): " gitans
 if [[ "$gitans" =~ ^[Yy]$ ]]; then
-    echo "cloning repo to $BASE_DIR"
-    git clone https://github.com/falafelvendor/dotterfiles "$BASE_DIR"
-   
-    cd dotterfiles 
-    chmod +x "dotfinstall.sh"
+    if [ -d "$BASE_DIR" ]; then
+        echo ">>> $BASE_DIR already exists, pulling instead..."
+        git -C "$BASE_DIR" pull
+    else
+        git clone https://github.com/falafelvendor/dotterfiles "$BASE_DIR"
+    fi
+    chmod +x "$BASE_DIR/dotfinstall.sh"
 else
-    echo "git repo skip: Caution, following steps might fail if files are missing."
-fi 
+    echo ">>> Skipping repo clone. Steps below may fail if files are missing."
+fi
 
-# Copy .bashrc / .zshrc
-# We use -f to check if the file exists in the repo before copying
-read -p "replace .bashrc? (Y/N): " bashrcans
+# ── Shell config ──────────────────────────────────────────────────────────────
+read -rp "Replace .bashrc? (y/n): " bashrcans
 if [[ "$bashrcans" =~ ^[Yy]$ ]]; then
-    [ -f "$BASE_DIR/.bashrc" ] && cp "$HOME/.bashrc" "$HOME/.bashrc.bak" && cp "$BASE_DIR/.bashrc" "$HOME/.bashrc"
-elif [[ "$bashrcans" =~ ^[Nn]$ ]]; then
-    read -p "replace .zshrc? (Y/n) " zshrcans
+    if [ -f "$BASE_DIR/.bashrc" ]; then
+        cp "$HOME/.bashrc" "$HOME/.bashrc.bak"
+        cp "$BASE_DIR/.bashrc" "$HOME/.bashrc"
+        echo ">>> .bashrc replaced (backup at ~/.bashrc.bak)"
+    else
+        echo ">>> .bashrc not found in repo, skipping."
+    fi
+else
+    read -rp "Replace .zshrc instead? (y/n): " zshrcans
     if [[ "$zshrcans" =~ ^[Yy]$ ]]; then
-        [ -f "$BASE_DIR/.zshrc" ] && cp "$HOME/.zshrc" "$HOME/.zshrc.bak" && cp "$BASE_DIR/.zshrc" "$HOME/.zshrc"
+        if [ -f "$BASE_DIR/.zshrc" ]; then
+            cp "$HOME/.zshrc" "$HOME/.zshrc.bak"
+            cp "$BASE_DIR/.zshrc" "$HOME/.zshrc"
+            echo ">>> .zshrc replaced (backup at ~/.zshrc.bak)"
+        else
+            echo ">>> .zshrc not found in repo, skipping."
+        fi
     fi
 fi
 
-# Copy Dotfiles (Running your sub-script)
-read -p "copy dotfiles? (y/n): " copyans
+# ── Dotfiles ──────────────────────────────────────────────────────────────────
+read -rp "Copy dotfiles? (y/n): " copyans
 if [[ "$copyans" =~ ^[Yy]$ ]]; then
-    ./dotfinstall.sh
+    bash "$BASE_DIR/dotfinstall.sh"
 fi
 
-# Install Yay
-if ! command -v yay &> /dev/null; then
-    read -p "Install yay? (y/n): " yayinstallans
-    if [[ "$yayinstallans" =~ ^[Yy]$ ]]; then
-        git clone https://aur.archlinux.org/yay.git "$HOME/yay"
-        cd "$HOME/yay" && makepkg -si
+# ── Yay ───────────────────────────────────────────────────────────────────────
+if ! command -v yay &>/dev/null; then
+    read -rp "Install yay (AUR helper)? (y/n): " yayans
+    if [[ "$yayans" =~ ^[Yy]$ ]]; then
+        git clone https://aur.archlinux.org/yay.git "$HOME/yay-build"
+        (cd "$HOME/yay-build" && makepkg -si)
+        rm -rf "$HOME/yay-build"
     fi
 fi
 
-# Install Yay packages
-read -p "Install yay packages? (y/n): " answer
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    yay -S $Yay_PACKAGES
+read -rp "Install AUR packages? (y/n): " yaypackans
+if [[ "$yaypackans" =~ ^[Yy]$ ]]; then
+    yay -S $YAY_PACKAGES
 fi
 
-# Install Wireguard (The part you were working on)
-read -p "install wireguard configs? /etc/wireguard/* ? (y/n): " wga 
-if [[ "$wga" =~ ^[Yy]$ ]]; then
-    # Assuming your wg configs are in your repo's wireguard folder
+# ── Wireguard configs ─────────────────────────────────────────────────────────
+read -rp "Install WireGuard configs from repo? (y/n): " wgans
+if [[ "$wgans" =~ ^[Yy]$ ]]; then
     if [ -d "$BASE_DIR/wireguard" ]; then
-        echo "installing wireguard configs..."
         sudo cp -r "$BASE_DIR/wireguard/"* /etc/wireguard/
         sudo chmod 600 /etc/wireguard/*.conf
-        echo "Configs copied to /etc/wireguard/"
+        echo ">>> WireGuard configs installed to /etc/wireguard/"
     else
-        echo "Error: Wireguard folder not found in $BASE_DIR"
+        echo ">>> No wireguard/ folder found in $BASE_DIR, skipping."
     fi
 fi
 
-# Restart system?
-read -p "Finished. Restart System? (Y/N): " restartanswer
-if [[ "$restartanswer" =~ ^[Yy]$ ]]; then
+# ── Done ──────────────────────────────────────────────────────────────────────
+read -rp "All done! Reboot now? (y/n): " rebootans
+if [[ "$rebootans" =~ ^[Yy]$ ]]; then
     reboot
 fi
