@@ -7,36 +7,38 @@
 }
 
 window#waybar {
-  background: rgba(0, 0, 0, 0.14);
+  background: transparent;
 }
 
 tooltip {
-  border-radius: 15px;
-  background: rgba(0, 0, 0, 1);
+  border-radius: 14px;
+  background: rgba(20, 20, 24, 0.9);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   color: @active;
 }
 
 tooltip label {
   color: @active;
+  padding: 2px 4px;
 }
 
+/* === GROUP CONTAINERS === */
 .modules-left,
 .modules-center,
 .modules-right {
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 15px;
-  margin: 2px 5px;
-  padding: 2px 6px;
+  background: rgba(20, 20, 24, 0.75);
+  border-radius: 16px;
+  margin: 5px 6px;
+  padding: 2px 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .modules-center {
-  padding: 2px 15px;
+  padding: 2px 18px;
 }
 
-#custom-logo {
-  padding: 0 10px;
-}
-
+/* === SHARED MODULE STYLING === */
+#custom-logo,
 #battery,
 #custom-clipboard,
 #custom-colorpicker,
@@ -46,8 +48,6 @@ tooltip label {
 #bluetooth,
 #pulseaudio,
 #custom-hotspot,
-#pulseaudio.mic,
-#pulseaudio.bluetooth,
 #network,
 #disk,
 #memory,
@@ -61,10 +61,37 @@ tooltip label {
 #window,
 #custom-date {
   font-family: "Poppins", sans-serif;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 400;
-  letter-spacing: 2.8px;
-  padding: 2px 10px;
+  letter-spacing: 1.6px;
+  padding: 2px 12px;
+  border-radius: 12px;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+#custom-logo {
+  font-size: 19px;
+  padding: 0 14px;
+  color: @active;
+}
+
+/* Subtle hover highlight on individual modules */
+#battery:hover,
+#custom-clipboard:hover,
+#custom-colorpicker:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#network:hover,
+#disk:hover,
+#memory:hover,
+#backlight:hover,
+#cpu:hover,
+#temperature:hover,
+#custom-weather:hover,
+#idle_inhibitor:hover,
+#tray:hover,
+#window:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 #custom-window {
@@ -73,40 +100,39 @@ tooltip label {
   padding: 2px 10px;
 }
 
-
-/* ✅ WORKSPACES — centered dot + centered underline */
+/* === WORKSPACES === */
 #workspaces {
-  padding: 0 8px;
+  padding: 0 6px;
   margin: 0 4px;
+  border-radius: 12px;
 }
 
 #workspaces button {
   all: unset;
-  margin: 0 10px;
-  padding: 6px 4px;
+  margin: 0 6px;
+  padding: 6px 8px;
   font-size: 18px;
-  color: #888888;
+  color: #6c6c6c;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
 
 #workspaces button.active {
   color: @active;
-} 
+  background-color: rgba(255, 255, 255, 0.08);
+}
 
 #workspaces button:hover {
-  background-color: rgba(255, 255, 255, 0.0);
+  color: @active;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-#pulseaudio {
-  padding-top: 2px;
-}
-
+/* === PULSEAUDIO === */
 #pulseaudio.muted {
-  color: #FF0000;
-  padding-top: 2px;
-  padding-right: 10px;
+  color: #ff5c5c;
 }
 
-/* TRAY CONTEXT MENU FIX */
+/* === TRAY CONTEXT MENU FIX === */
 menu,
 .menu,
 .popup,
@@ -114,7 +140,7 @@ menu,
 .popup window,
 menuitem,
 .menuitem {
-  background-color: rgba(20, 20, 20, 0.9);
+  background-color: rgba(20, 20, 24, 0.92);
   color: #d4d4d4;
   border-radius: 10px;
   padding: 6px 10px;
@@ -127,8 +153,10 @@ menuitem:hover,
   background-color: rgba(255, 255, 255, 0.08);
   color: #ffffff;
 }
+
+/* === WINDOW TITLE === */
 #window {
-  margin-right: 5px;  /* or adjust as needed */
-  min-width: 100px; /* or adjust to your liking */
-  padding: 2px 10px;
+  margin-right: 4px;
+  min-width: 100px;
+  padding: 2px 12px;
 }

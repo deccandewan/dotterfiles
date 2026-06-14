@@ -55,7 +55,8 @@ alias HDD="sudo mount /dev/sda1 /mnt/HDD"
 alias Hdd='cd /mnt/HDD'
 alias mnt="sudo mount"
 alias ani="ani-cli"
-
+alias talker="ollama run llama3.2:3b"
+alias coder="ollama run qwen3.5:4b"
 neofetch
 upower -b | grep "percentage"
 alias rbx="sudo wg-quick down aloo && flatpak run org.vinegarhq.Sober"

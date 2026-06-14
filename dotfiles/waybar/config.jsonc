@@ -67,11 +67,12 @@
  }, 
 
 "network": {
+  "interval": 2,
   "format-wifi": "<span font='12'></span>",
   "format-ethernet": "<span font='12'></span>",
   "format-disconnected": "<span font='12'></span>",
-  "tooltip-format-wifi": "{essid} ({signalStrength}%)  | {ipaddr}",
-  "tooltip-format-ethernet": "{ifname}  | {ipaddr}",
+  "tooltip-format-wifi": "{essid} ({signalStrength}%)  | {ipaddr}\n↑ {bandwidthUpBytes}  ↓ {bandwidthDownBytes}",
+  "tooltip-format-ethernet": "{ifname}  | {ipaddr}\n↑ {bandwidthUpBytes}  ↓ {bandwidthDownBytes}",
   "on-click": "networkmanager_dmenu"
 },
 
@@ -201,4 +202,5 @@
   }
 
 }
+
 
