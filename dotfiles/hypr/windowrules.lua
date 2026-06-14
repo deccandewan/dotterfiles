@@ -1,0 +1,31 @@
+
+hl.window_rule({ match = { class = "org.kde.polkit-kde-authentication-agent-1" }, float = true })
+hl.window_rule({ match = { class = "pavucontrol" }, float = true })
+hl.window_rule({ match = { title = "Media viewer" }, float = true })
+hl.window_rule({ match = { title = "Volume Control" }, float = true })
+hl.window_rule({ match = { title = "Picture-in-Picture" }, float = true })
+hl.window_rule({ match = { class = "Viewnior" }, float = true })
+hl.window_rule({ match = { title = "DevTools" }, float = true })
+hl.window_rule({ match = { class = "file_progress" }, float = true })
+hl.window_rule({ match = { class = "confirm" }, float = true })
+hl.window_rule({ match = { class = "dialog" }, float = true })
+hl.window_rule({ match = { class = "download" }, float = true })
+hl.window_rule({ match = { class = "notification" }, float = true })
+hl.window_rule({ match = { class = "error" }, float = true })
+hl.window_rule({ match = { class = "confirmreset" }, float = true })
+hl.window_rule({ match = { title = "Open File" }, float = true })
+hl.window_rule({ match = { title = "branchdialog" }, float = true })
+hl.window_rule({ match = { title = "Confirm to replace files" }, float = true })
+hl.window_rule({ match = { title = "File Operation Progress" }, float = true })
+hl.window_rule({ match = { title = "Welcome to Audacity" }, float = true })
+hl.window_rule({ match = { title = "rofi" }, float = true, no_anim = true })
+hl.window_rule({ match = { title = "wlogout" }, fullscreen = true, float = true })
+
+
+hl.window_rule({ match = { class = "download" }, size = {800, 600} })
+hl.window_rule({ match = { title = "Open File" }, size = {800, 600} })
+hl.window_rule({ match = { title = "Save File" }, size = {800, 600} })
+hl.window_rule({ match = { title = "Volume Control" }, size = {800, 600} })
+
+
+hl.window_rule({ match = { class = "mpv" }, idle_inhibit = "focus" })
