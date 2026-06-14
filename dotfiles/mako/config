@@ -4,7 +4,7 @@ height=110
 margin=10
 padding=12
 border-size=2
-border-radius=0
+border-radius=12
 icons=1
 icon-path=/usr/share/icons/Papirus-Dark
 max-icon-size=32
@@ -13,6 +13,10 @@ actions=1
 default-timeout=5000
 ignore-timeout=0
 layer=overlay
+
+group-by=app-name
+sort=-time
+max-visible=5
 
 # Rose Pine / dark teal palette
 background-color=#0d1f22
@@ -36,3 +40,7 @@ background-color=#1a1a2e
 text-color=#f38ba8
 border-color=#f38ba8
 default-timeout=0
+
+[mode=dnd]
+invisible=1
+
