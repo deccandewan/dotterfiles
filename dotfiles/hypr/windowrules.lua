@@ -22,10 +22,10 @@ hl.window_rule({ match = { title = "rofi" }, float = true, no_anim = true })
 hl.window_rule({ match = { title = "wlogout" }, fullscreen = true, float = true })
 
 
-hl.window_rule({ match = { class = "download" }, size = {800, 600} })
-hl.window_rule({ match = { title = "Open File" }, size = {800, 600} })
-hl.window_rule({ match = { title = "Save File" }, size = {800, 600} })
-hl.window_rule({ match = { title = "Volume Control" }, size = {800, 600} })
+hl.window_rule({ match = { class = "download" }, size = {1000, 500} })
+hl.window_rule({ match = { title = "Open File" }, size = {1000, 500} })
+hl.window_rule({ match = { title = "Save File" }, size = {1000, 500} })
+hl.window_rule({ match = { title = "Volume Control" }, size = {1000, 500} })
 
 
 hl.window_rule({ match = { class = "mpv" }, idle_inhibit = "focus" })
