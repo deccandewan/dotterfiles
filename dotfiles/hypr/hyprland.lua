@@ -1,4 +1,3 @@
-
 --https://www.gnome-look.org/p/2305696--
 ------------------
 ---- MONITORS ----
@@ -32,6 +31,10 @@ local menu        = "wofi --show drun"
 -------------------
 
 hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE")
+    hl.exec_cmd("systemctl --user start xdg-desktop-portal-hyprland")
+    hl.exec_cmd("sleep 1 && /usr/lib/xdg-desktop-portal --replace")
     hl.exec_cmd("date '+[HYPREntry] %F %T' >> ~/.hypr-timestamp.log")
     hl.exec_cmd("systemctl enable NetworkManager.service")
     hl.exec_cmd("nmcli connection up Sahnun")
@@ -174,7 +177,7 @@ hl.bind("SHIFT + PRINT",        hl.dsp.exec_cmd("hyprshot -m region -o ~/Picture
 hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("firefox"))
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + C", hl.dsp.window.close())
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("hyprctl dispatch exit"))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("loginctl terminate-session $XDG_SESSION_ID"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
@@ -185,7 +188,7 @@ hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliph
 -- System
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.exec_cmd("poweroff"))
 hl.bind(mainMod .. " + SHIFT + R", hl.dsp.exec_cmd("reboot"))
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("hyprctl dispatch exit"))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("loginctl terminate-session $XDG_SESSION_ID"))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Notifications
